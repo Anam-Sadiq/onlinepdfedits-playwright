@@ -1,0 +1,64 @@
+# .github/workflows/playwright.yml
+#
+# This file tells GitHub to run your Playwright tests automatically
+# every time you push code or open a Pull Request.
+#
+# How to use:
+#   1. Push this project to GitHub
+#   2. GitHub reads this file and runs your tests in the cloud — for FREE
+#   3. You see a green ✅ or red ❌ on every push
+
+name: Playwright Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      # 1. Check out your code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # 3. Install npm dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Install Playwright browsers (Chromium, Firefox, WebKit)
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium firefox
+
+      # 5. Run all Playwright tests
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      # 6. Upload the HTML report so you can download and view it
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        if: always()   # upload even if tests fail
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+      # 7. Upload failure screenshots
+      - name: Upload failure screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: failure-screenshots
+          path: screenshots/
+          retention-days: 7

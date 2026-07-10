@@ -1,0 +1,16 @@
+{
+  "name": "onlinepdfedits-playwright-tests",
+  "version": "1.0.0",
+  "description": "Playwright + TypeScript automation tests for onlinepdfedits.com — beginner project",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:ui": "npx playwright test --ui",
+    "test:debug": "npx playwright test --debug",
+    "report": "npx playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.44.0",
+    "typescript": "^5.4.5"
+  }
+}

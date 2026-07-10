@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Playwright reports
+playwright-report/
+blob-report/
+test-results/
+
+# Videos
+*.webm
+
+# Zip files
+*.zip
+
+# Environment
+.env
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
