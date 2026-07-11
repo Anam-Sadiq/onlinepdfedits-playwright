@@ -41,17 +41,21 @@ test.describe('Home page — page load', () => {
 test.describe('Home page — hero section', () => {
 
   test('"Start Editing" CTA button should be visible', async ({ page }) => {
-  const ctaLinks = page.getByRole('link', { name: /start editing/i });
+  const ctaLinks = page
+    .locator('a[href="/edit-pdf"], button')
+    .filter({ hasText: /start editing|edit (a )?pdf/i });
   const count = await ctaLinks.count();
   let anyVisible = false;
   for (let i = 0; i < count; i++) {
     if (await ctaLinks.nth(i).isVisible()) { anyVisible = true; break; }
   }
-  expect(anyVisible, '"Start Editing" link should be visible').toBe(true);
+  expect(anyVisible, '"Start Editing" CTA should be visible').toBe(true);
 });
 
 test('"Start Editing" button should navigate to /edit-pdf', async ({ page }) => {
-  const ctaLinks = page.getByRole('link', { name: /start editing/i });
+  const ctaLinks = page
+    .locator('a[href="/edit-pdf"], button')
+    .filter({ hasText: /start editing|edit (a )?pdf/i });
   const count = await ctaLinks.count();
   let clicked = false;
   for (let i = 0; i < count; i++) {
@@ -65,7 +69,7 @@ test('"Start Editing" button should navigate to /edit-pdf', async ({ page }) => 
       break;
     }
   }
-  expect(clicked, 'No visible "Start Editing" link found').toBe(true);
+  expect(clicked, 'No visible "Start Editing" CTA found').toBe(true);
   await expect(page).toHaveURL(URLS.editPdf);
 });
 

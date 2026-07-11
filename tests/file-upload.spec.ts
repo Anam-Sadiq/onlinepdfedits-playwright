@@ -24,10 +24,36 @@ const SAMPLE_JPG = path.join(__dirname, '..', 'test-data', 'sample.jpg');
 const SAMPLE_TXT = path.join(__dirname, '..', 'test-data', 'sample.txt');
 
 // ── Helper: upload a file to the first file input on the page ────────────────
+//
+// NOTE: these uploaders only wire up their file-input handler once the visible
+// "Upload"/"Choose" trigger is clicked (the trigger calls the hidden input's
+// .click() which opens a native file chooser). Setting files directly on the
+// hidden <input> does NOT trigger the handler, so the editor never mounts.
+// We drive the real flow: click the trigger, capture the file chooser, and set
+// the file there. Falls back to a direct setInputFiles for plain inputs.
 async function uploadFile(page: any, filePath: string): Promise<void> {
+  const trigger = page
+    .locator('button, [role="button"]')
+    .filter({ hasText: /upload|choose|drag|drop|select|import|browse/i })
+    .first();
+
+  if (await trigger.count()) {
+    const [chooser] = await Promise.all([
+      page.waitForEvent('filechooser', { timeout: 5_000 }).catch(() => null),
+      trigger.click().catch(() => {}),
+    ]);
+    if (chooser) {
+      await chooser.setFiles(filePath);
+      await page.waitForLoadState('networkidle').catch(() => {});
+      return;
+    }
+  }
+
+  // Fallback: plain <input type="file"> whose handler is already attached.
   const fileInput = page.locator('input[type="file"]').first();
   await fileInput.waitFor({ state: 'attached', timeout: 10_000 });
   await fileInput.setInputFiles(filePath);
+  await page.waitForLoadState('networkidle').catch(() => {});
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

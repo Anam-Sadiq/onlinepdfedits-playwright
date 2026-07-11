@@ -29,7 +29,8 @@ test.describe('PDF Tools page — page load', () => {
   });
 
   test('should have the correct page title', async ({ page }) => {
-    await expect(page).toHaveTitle(/PDF Tools We Currently Offer/i);
+    // The <title> was changed for SEO; it is now "Free PDF Tools Online — Edit, Compress, Sign, Merge & More"
+    await expect(page).toHaveTitle(/Free PDF Tools Online/i);
   });
 
   test('should display the main H1 heading', async ({ page }) => {

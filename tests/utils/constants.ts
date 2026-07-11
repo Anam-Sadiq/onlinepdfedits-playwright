@@ -24,7 +24,7 @@ export const URLS = {
 };
 
 export const PAGE_TITLES = {
-  pdfTools: 'PDF Tools We Currently Offer',
+  pdfTools: 'Free PDF Tools Online',
   home:     'Online PDF Edits',
 };
 

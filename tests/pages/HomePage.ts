@@ -17,7 +17,14 @@ export class HomePage {
     this.page = page;
 
     this.logo           = page.locator('a[href="/"]').first();
-    this.startEditingBtn = page.getByRole('link', { name: /start editing/i }).first();
+    // The hero CTA used to read "Start editing"; it now renders as
+    // `<a href="/edit-pdf" aria-label="Edit a PDF online — open the editor">Edit PDF</a>`.
+    // Match by the destination + the visible/aria text so the locator survives
+    // either wording (and survives a <button> rewrite too).
+    this.startEditingBtn = page
+      .locator('a[href="/edit-pdf"], button')
+      .filter({ hasText: /start editing|edit (a )?pdf/i })
+      .first();
     this.pdfToolsLink   = page.getByRole('link', { name: /all tools/i }).first();
     this.heroHeading    = page.getByRole('heading').first();
   }

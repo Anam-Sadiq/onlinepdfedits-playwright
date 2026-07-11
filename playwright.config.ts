@@ -13,6 +13,15 @@ export default defineConfig({
   // 🖥️ Run tests in parallel for speed
   fullyParallel: true,
 
+  // 🐌 Limit concurrency to 1 worker.
+  // The site is served by a single live nginx instance with rate limiting in
+  // front of it. Running 4 browser projects × multiple workers DDoS's the box
+  // and most failures were actually "429 Too Many Requests" error pages being
+  // loaded instead of the real page. Serialising requests fixes that noise.
+  // (If you have a staging env with generous limits, point `baseURL` at it and
+  // raise this back up.)
+  workers: 1,
+
   // 📊 Reporter: shows results in terminal + saves an HTML report
   reporter: [['list'], ['html', { open: 'never' }]],
 
